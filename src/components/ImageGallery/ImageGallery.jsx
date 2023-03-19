@@ -13,8 +13,10 @@ class ImageGallery extends Component {
               tags={picture.tags}
               key={picture.id}
               id={picture.id}
-              openBigImage={this.props.openBigImage}
-              toggleModal={this.props.toggleModal}
+              openBigImage={() => {
+                this.props.openBigImage(picture.largeImageURL);
+              }}
+              // toggleModal={this.props.toggleModal}
               largeImageURL={picture.largeImageURL}
             />
           );
@@ -33,7 +35,7 @@ ImageGallery.propTypes = {
     })
   ).isRequired,
   openBigImage: PropTypes.func.isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  // toggleModal: PropTypes.func.isRequired,
 };
 
 export default ImageGallery;

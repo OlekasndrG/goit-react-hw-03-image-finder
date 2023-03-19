@@ -18,10 +18,11 @@ const ImageGalleryItem = ({
       <ImageGalleryItemImage
         src={webformatURL}
         alt={tags}
-        onClick={() => {
-          toggleModal();
-          openBigImage(largeImageURL);
-        }}
+        // onClick={() => {
+        //   toggleModal();
+        //   openBigImage(largeImageURL);
+        // }}
+        onClick={openBigImage}
       />
     </ImageGalleryItemContainer>
   );
@@ -32,7 +33,7 @@ ImageGalleryItem.propTypes = {
   id: PropTypes.number.isRequired,
   largeImageURL: PropTypes.string.isRequired,
   openBigImage: PropTypes.func.isRequired,
-  toggleModal: PropTypes.func.isRequired,
+  // toggleModal: PropTypes.func.isRequired,
 };
 
 export default ImageGalleryItem;

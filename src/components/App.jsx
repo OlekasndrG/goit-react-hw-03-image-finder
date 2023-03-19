@@ -87,10 +87,12 @@ export class App extends Component {
     }));
   };
   openBigImage = currentUrl => {
+
     this.setState({
       activeImg: this.state.picturesArray.find(
         img => img.largeImageURL === currentUrl
       ),
+      showModal: true,
     });
   };
 
@@ -104,7 +106,7 @@ export class App extends Component {
         {status === STATUS.PENDING && <Loader />}
 
         {showModal && (
-          <Modal onClose={this.toggleModal}>
+          <Modal onClose={this.toggleModal} >
             <img
               width="60%"
               src={activeImg.largeImageURL}
@@ -115,7 +117,7 @@ export class App extends Component {
         <ImageGallery
           picturesArray={picturesArray}
           openBigImage={this.openBigImage}
-          toggleModal={this.toggleModal}
+          // toggleModal={this.toggleModal}
         />
 
         {/* {status === STATUS.REJECTED && <p>{error}</p>} */}
