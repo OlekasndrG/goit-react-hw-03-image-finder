@@ -39,7 +39,7 @@ export class App extends Component {
       FetchAPI(this.state.querySearch, this.state.page).then(results => {
         this.setState(prevState => ({
           picturesArray: [...prevState.picturesArray, ...results.hits],
-          status: STATUS.RESOLVED,
+          status: STATUS.IDLE,
         }));
         if (results.hits.length === 0) {
           this.setState({ status: STATUS.IDLE, showMoreBTn: false });
@@ -56,6 +56,8 @@ export class App extends Component {
         }
         if (results.totalHits > 12) {
           this.setState({ showMoreBTn: true });
+        } else {
+          this.setState({ showMoreBTn: false });
         }
       });
       // .catch(error => {
@@ -95,6 +97,9 @@ export class App extends Component {
     return (
       <MainContainer>
         <Searchbar onSubmit={this.handleSearchSubmit} />
+
+        {status === STATUS.PENDING && <Loader />}
+
         {showModal && (
           <Modal onClose={this.toggleModal}>
             <img
@@ -104,14 +109,12 @@ export class App extends Component {
             />
           </Modal>
         )}
-        {status === STATUS.PENDING && <Loader />}
-        {status === STATUS.RESOLVED && (
-          <ImageGallery
-            picturesArray={picturesArray}
-            openBigImage={this.openBigImage}
-            toggleModal={this.toggleModal}
-          />
-        )}
+        <ImageGallery
+          picturesArray={picturesArray}
+          openBigImage={this.openBigImage}
+          toggleModal={this.toggleModal}
+        />
+
         {/* {status === STATUS.REJECTED && <p>{error}</p>} */}
         {showMoreBTn && (
           <LoadMoreBtn type="button" onClick={this.handleLoadMore}>
