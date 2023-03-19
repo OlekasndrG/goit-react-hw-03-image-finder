@@ -90,28 +90,30 @@ export class App extends Component {
   };
 
   render() {
+    const { showModal, activeImg, status, showMoreBTn, picturesArray } =
+      this.state;
     return (
       <MainContainer>
         <Searchbar onSubmit={this.handleSearchSubmit} />
-        {this.state.showModal && (
+        {showModal && (
           <Modal onClose={this.toggleModal}>
             <img
               width="60%"
-              src={this.state.activeImg.largeImageURL}
-              alt={this.state.activeImg.tags}
+              src={activeImg.largeImageURL}
+              alt={activeImg.tags}
             />
           </Modal>
         )}
-        {this.state.status === STATUS.PENDING && <Loader />}
-        {this.state.status === STATUS.RESOLVED && (
+        {status === STATUS.PENDING && <Loader />}
+        {status === STATUS.RESOLVED && (
           <ImageGallery
-            picturesArray={this.state.picturesArray}
+            picturesArray={picturesArray}
             openBigImage={this.openBigImage}
             toggleModal={this.toggleModal}
           />
         )}
-        {/* {this.state.status === STATUS.REJECTED && <p>{this.state.error}</p>} */}
-        {this.state.showMoreBTn && (
+        {/* {status === STATUS.REJECTED && <p>{error}</p>} */}
+        {showMoreBTn && (
           <LoadMoreBtn type="button" onClick={this.handleLoadMore}>
             Load More
           </LoadMoreBtn>
