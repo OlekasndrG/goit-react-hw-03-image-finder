@@ -71,7 +71,10 @@ export class App extends Component {
   }
 
   handleSearchSubmit = querySearch => {
-    this.setState({ querySearch: querySearch, page: 1, picturesArray: [] });
+    if (this.state.querySearch === querySearch) {
+      return;
+    }
+    this.setState({ querySearch, page: 1, picturesArray: [] });
   };
   handleLoadMore = () => {
     this.setState(prevState => ({
