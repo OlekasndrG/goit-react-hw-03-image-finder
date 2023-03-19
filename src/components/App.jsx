@@ -7,8 +7,15 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import { FetchAPI } from './Utils/Fetch/API';
 import Loader from './Loader/Loader';
 import { LoadMoreBtn, MainContainer } from './App.styled';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-// idle , pending, fullfilled, rejected
+const STATUS = {
+  IDLE: 'idle',
+  PENDING: 'pending',
+  REJECTED: 'rejected',
+  RESOLVED: 'resolved',
+};
 
 export class App extends Component {
   state = {
@@ -18,8 +25,9 @@ export class App extends Component {
     picturesArray: [],
     showMoreBTn: false,
     activeImg: {},
-    status: 'idle',
+    status: STATUS.IDLE,
     loading: false,
+    error: '',
   };
 
   async componentDidUpdate(prevProps, prevState) {
@@ -27,20 +35,36 @@ export class App extends Component {
       this.state.querySearch !== prevState.querySearch ||
       this.state.page !== prevState.page
     ) {
-      this.setState({ loading: true, showMoreBTn: false });
-      const results = await FetchAPI(this.state.querySearch, this.state.page);
-      this.setState(prevState => ({
-        picturesArray: [...prevState.picturesArray, ...results.hits],
-        loading: false,
-      }));
-      if (results.hits.length === 0) {
-        alert(`We didnt find ${this.state.querySearch}`);
-        this.setState({ showMoreBTn: false, loading: false });
-        return;
-      }
-      if (results.totalHits > 12) {
-        this.setState({ showMoreBTn: true });
-      }
+      this.setState({ status: STATUS.PENDING });
+      FetchAPI(this.state.querySearch, this.state.page).then(results => {
+        this.setState(prevState => ({
+          picturesArray: [...prevState.picturesArray, ...results.hits],
+          status: STATUS.RESOLVED,
+        }));
+        if (results.hits.length === 0) {
+          this.setState({ status: STATUS.IDLE, showMoreBTn: false });
+          toast.error(`We didnt find results for ${this.state.querySearch}`, {
+            position: 'top-center',
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: 'dark',
+          });
+        }
+        if (results.totalHits > 12) {
+          this.setState({ showMoreBTn: true });
+        }
+      });
+      // .catch(error => {
+      //   console.log(error);
+      //   return this.setState({
+      //     error: error.message,
+      //     status: STATUS.REJECTED,
+      //   });
+      // });
     }
   }
 
@@ -78,20 +102,32 @@ export class App extends Component {
             />
           </Modal>
         )}
-        {this.state.loading && <Loader />}
-        {this.state.picturesArray.length > 0 && (
+        {this.state.status === STATUS.PENDING && <Loader />}
+        {this.state.status === STATUS.RESOLVED && (
           <ImageGallery
             picturesArray={this.state.picturesArray}
             openBigImage={this.openBigImage}
             toggleModal={this.toggleModal}
           />
         )}
-
+        {/* {this.state.status === STATUS.REJECTED && <p>{this.state.error}</p>} */}
         {this.state.showMoreBTn && (
           <LoadMoreBtn type="button" onClick={this.handleLoadMore}>
             Load More
           </LoadMoreBtn>
         )}
+        <ToastContainer
+          position="top-center"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
       </MainContainer>
     );
   }
