@@ -13,3 +13,8 @@ export const FetchAPI = async (searchQuery, page) => {
     console.log(error);
   }
 };
+
+FetchAPI.PropTypes = {
+  searchQuery: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+};

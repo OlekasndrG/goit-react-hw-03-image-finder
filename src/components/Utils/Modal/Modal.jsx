@@ -1,7 +1,7 @@
 // import { nanoid } from 'nanoid';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Overlay, InnerModal } from './Modal.styled';
+import { Overlay } from './Modal.styled';
 
 import { createPortal } from 'react-dom';
 
